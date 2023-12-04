@@ -1,28 +1,26 @@
 import re
-note = 0
-
+import hashlib
 
 def password():
-    global note
     while True:
         mdp = input("Choisissez votre mot de passe : ")
         if len(mdp) < 8:
-            note = -1
+            print("Erreur : le mot de passe doit contenir au moins 8 caractères.")
         elif not re.search("[a-z]", mdp):
-            note = -1
+            print("Erreur : le mot de passe doit contenir au moins 1 minuscule.")
         elif not re.search("[A-Z]", mdp):
-            note = -1
+            print("Erreur : le mot de passe doit contenir au moins 1 majuscule.")
         elif not re.search("[0-9]", mdp):
-            note = -1
-        elif not re.search("[*%@$!#\^]", mdp):
-            note = -1
+            print("Erreur : le mot de passe doit contenir au moins 1 chiffre.")
+        elif not re.search("[*%@$!#\\^]", mdp):
+            print("Erreur : le mot de passe doit contenir au moins 1 caractère spécial.")
         elif re.search("\s", mdp):
-            note = -1
+            print("Erreur : le mot de passe ne doit pas contenir d'espaces.")
         else:
-            note = 0
             print("Mot de passe validé.")
+            hash_mdp = hashlib.sha256(mdp.encode())
+            hex_dig = hash_mdp.hexdigest()
+            print(f"Hash du mot de passe : {hex_dig}.")
             break
-        if note == -1:
-            print("Erreur : le mot de passe doit contenir au moins 8 caractères : 1 majuscule, 1 minuscule et un caractère spécial.")
 
 password()
