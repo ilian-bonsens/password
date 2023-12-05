@@ -43,7 +43,7 @@ def view_passwords():
                 print("\n[+] Hash :\n")
                 for password_data in data:
                     print(f"{password_data['hash']}\n")
-                    break
+            break
         else:
             print("\nErreur : clé de déchiffrement incorrecte.")
 
