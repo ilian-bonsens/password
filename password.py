@@ -1,5 +1,4 @@
-import re
-import hashlib
+import re, hashlib, json, os
 
 def password():
     while True:
@@ -20,7 +19,18 @@ def password():
             print("Mot de passe validé.")
             hash_mdp = hashlib.sha256(mdp.encode())
             hex_dig = hash_mdp.hexdigest()
-            print(f"Hash du mot de passe : {hex_dig}.")
+            print(f"Hash du mot de passe (NE JAMAIS LE PARTAGER): {hex_dig}.")
+#verifie si le fichier json existe : si oui on le charge, si non on cree une liste vide qui va accueillir
+    #les data a ajouter au fichier json qui va etre cree
+        if not os.path.exists('save.json'):
+            data = []
+        else:
+            with open('save.json', 'r') as file:
+                data = json.load(file)
+        ligne = {'mot de passe' : mdp, 'hash' : hex_dig}
+        data.append(ligne)
+        with open('save.json', 'w') as file:
+            json.dump(data, file, indent=1)
             break
 
 password()
