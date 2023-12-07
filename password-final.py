@@ -1,10 +1,12 @@
 import hashlib, json, os, random, string
 from cryptography.fernet import Fernet
 
-# Génère une clé pour le chiffrement du fichier json avec les hashes
+
+# Génère une clé pour ouvrir le fichier json avec les hashes
 key = Fernet.generate_key()
-cipher_suite = Fernet(key)
+token = Fernet(key)
 print(f"\nClé de chiffrement : {key.decode()}\n")
+
 
 def store_password(password):
     while True:
@@ -20,9 +22,11 @@ def store_password(password):
         if os.path.exists(file_name):
             with open(file_name, 'r') as file:
                 data = json.load(file)
+
             if any(d['hash'] == hashed_password for d in data):
                 print("\n[+] Ce mot de passe existe déjà.\n")
                 return
+            
             data.append(password_data)
             with open(file_name, 'w') as file:
                 json.dump(data, file, indent=1)
@@ -32,11 +36,13 @@ def store_password(password):
                 json.dump([password_data], file, indent=1)
                 break
 
-def view_passwords():
+def voir_passwords():
     while True:
         securite = input("\nEntrez la clé de chiffrement : ")
+
         if securite == key.decode():
             file_name = 'passwords.json'
+
             if os.path.exists(file_name):
                 with open(file_name, 'r') as file:
                     data = json.load(file)
@@ -47,13 +53,16 @@ def view_passwords():
         else:
             print("\nErreur : clé de déchiffrement incorrecte.")
 
-def generate_password():
+
+def generer_password():
     while True:
         length = random.randint(8, 24)
         password = ''.join(random.choice(string.ascii_letters + string.digits + "*%@$!#^") for _ in range(length))
+
         if (len(password) >= 8 and any(c.islower() for c in password) and any(c.isupper() for c in password) 
             and any(c.isdigit() for c in password) and any(c in "*%@$!#^" for c in password)):
             return password
+
 
 while True:
     print("1. Créer un mot de passe")
@@ -67,12 +76,12 @@ while True:
         store_password(password)
 
     elif choice == '2':
-        password = generate_password()
+        password = generer_password()
         print(f"\n[+] Mot de passe généré : {password}\n")
         store_password(password)
 
     elif choice == '3':
-        view_passwords()
+        voir_passwords()
 
     elif choice == '4':
         break
